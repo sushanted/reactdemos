@@ -1,4 +1,4 @@
-package sr.reactdemos.mono.construct;
+package sr.reactdemos;
 
 import java.util.concurrent.atomic.AtomicReference;
 

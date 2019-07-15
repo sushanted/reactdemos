@@ -1,5 +1,6 @@
 package sr.reactdemos.mono.construct;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public class SimpleMonoConstructions {
@@ -26,10 +27,16 @@ public class SimpleMonoConstructions {
     // mono with error
     final Mono<Object> errorMono = Mono.error(() -> new RuntimeException("Error!"));
     try {
-    errorMono.block();
+      errorMono.block();
     } catch (final RuntimeException e) {
       System.out.println(e.getMessage());
     }
+
+
+    // Get a single mono and then cancel the subscription with the publisher
+    System.out.println("First value:" + Mono.from(Flux.range(1, 4)).block());
+
+
 
   }
 
