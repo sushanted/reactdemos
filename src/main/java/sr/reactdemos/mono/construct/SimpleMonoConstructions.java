@@ -22,6 +22,7 @@ public class SimpleMonoConstructions {
 
     // returns T so that can be assigned to any type of Mono
     final Mono<String> emptyMono = Mono.empty();
+    // returns null as nothing is returned by the mono
     System.out.println("Empty mono value: " + emptyMono.block());
 
     // mono with error
@@ -31,7 +32,6 @@ public class SimpleMonoConstructions {
     } catch (final RuntimeException e) {
       System.out.println(e.getMessage());
     }
-
 
     // Get a single mono and then cancel the subscription with the publisher
     System.out.println("First value:" + Mono.from(Flux.range(1, 4)).block());
