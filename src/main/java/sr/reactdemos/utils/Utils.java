@@ -10,4 +10,8 @@ public class Utils {
     Mono.delay(Duration.ofSeconds(seconds)).block();
   }
 
+  public static void print(final Object object) {
+    System.out.println(object);
+  }
+
 }

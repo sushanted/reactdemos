@@ -6,8 +6,9 @@ import java.util.Date;
 import reactor.core.publisher.Mono;
 
 /**
- * Difference between 'when' and zip : 'when' always returns Mono<Void> , zip
- * returns Tuple 'when' accepts publishers, zip accepts only Monos
+ * Difference between 'when' and zip : <br>
+ * 'when' always returns Mono<Void> , zip returns Tuple <br>
+ * 'when' accepts publishers, zip accepts only Monos
  *
  */
 public class MonoZip {

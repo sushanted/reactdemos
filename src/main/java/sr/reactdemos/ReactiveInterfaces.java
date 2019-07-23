@@ -7,6 +7,7 @@ import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public class ReactiveInterfaces {
 
@@ -62,6 +63,11 @@ public class ReactiveInterfaces {
 
     Flux.range(0, 10)//
         .subscribe(customSubscriber);
+
+	Mono.just(3)//
+		.doOnTerminate(() -> System.out.println("on"))//
+		.doAfterTerminate(() -> System.out.println("after"))//
+		.subscribe(customSubscriber);
 
   }
 
