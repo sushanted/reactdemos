@@ -21,6 +21,7 @@ public class MonoDoMethods {
 	System.out.println("Blocked output: " + delayedMono//
 		.block());
 
+
     }
 
     public static <T> Mono<T> chain(final Mono<T> mono, final String monoName) {

@@ -15,19 +15,19 @@ public class MonoDelay {
 	Mono.just("x")//
 		// runs on another thread
 		.delayElement(Duration.ofSeconds(2))//
-		.doOnSuccess(l -> System.out.println(Thread.currentThread().getName()))//
+		.doOnSuccess(Utils::printThreadName)//
 		.block();
 
 	Mono.empty()//
 		// runs on same thread : main
 		.delayElement(Duration.ofSeconds(2))//
-		.doOnTerminate(() -> System.out.println(Thread.currentThread().getName()))//
+		.doOnTerminate(Utils::printThreadName)//
 		.block();
 
 	Mono.error(RuntimeException::new)//
 		// runs on same thread : main
 		.delayElement(Duration.ofSeconds(2))//
-		.doOnTerminate(() -> System.out.println(Thread.currentThread().getName()))//
+		.doOnTerminate(Utils::printThreadName)//
 		.onErrorResume(t -> Mono.just(""))//
 		.block();
 
@@ -35,7 +35,7 @@ public class MonoDelay {
 		// Wait for the publisher to complete, maybe post the value to some other
 		// web-service
 		.delayUntil(value -> Mono.fromRunnable(() -> Utils.sleepForSeconds(2)))//
-		.doOnTerminate(() -> System.out.println(Thread.currentThread().getName()))//
+		.doOnTerminate(Utils::printThreadName)//
 		.block();
     }
 }
