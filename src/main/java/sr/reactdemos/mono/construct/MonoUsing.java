@@ -5,6 +5,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.Callable;
+
 import reactor.core.publisher.Mono;
 
 public class MonoUsing {
@@ -23,7 +24,7 @@ public class MonoUsing {
     };
 
     System.out.println(
-        Mono.using(//
+		Mono.using(//
             queryGenerator, //
             conn -> {
               System.out.println("Creating connection");

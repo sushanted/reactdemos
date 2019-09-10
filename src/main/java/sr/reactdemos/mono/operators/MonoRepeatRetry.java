@@ -11,6 +11,8 @@ import sr.reactdemos.utils.Utils;
 public class MonoRepeatRetry {
     public static void main(final String[] args) {
 
+	// repeat returns a flux created from repeated subscriptions
+
 	System.out.println("Repeat forever");
 	Mono.just("\tx")//
 		.doOnSubscribe(Utils.print("\trepeat unlimited subscribed"))//
@@ -32,6 +34,7 @@ public class MonoRepeatRetry {
 
 	System.out.println("Repeat on companion flux output");
 	Mono.just("\tcompanion repeat")//
+		// input flux to this function contains the latest attempt elements count 0/1
 		.repeatWhen(f -> f.limitRequest(3))// till the resultant publisher returns
 		.subscribe(System.out::println);
 

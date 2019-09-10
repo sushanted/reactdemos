@@ -11,6 +11,10 @@ public class Utils {
 	Mono.delay(Duration.ofSeconds(seconds)).block();
     }
 
+    public static void sleepForMillis(final int millis) {
+	Mono.delay(Duration.ofMillis(millis)).block();
+    }
+
     public static void print(final Object object) {
 	System.out.println(object);
     }

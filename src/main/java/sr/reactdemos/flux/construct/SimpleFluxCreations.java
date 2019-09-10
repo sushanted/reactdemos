@@ -2,7 +2,10 @@
 package sr.reactdemos.flux.construct;
 
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
+
+import org.reactivestreams.Subscription;
 
 import reactor.core.publisher.Flux;
 
@@ -40,6 +43,29 @@ public class SimpleFluxCreations {
 
 	Flux.error(RuntimeException::new).onErrorReturn("error occured!").subscribe(System.out::println);
 
+	System.out.println("\nError when requested: true (error occurs only after first request)");
 
+	demoErrorWhenRequested(true);
+
+	System.out.println("\nError when requested: false (error immediately occurs on subscription)");
+
+	demoErrorWhenRequested(false);
+
+    }
+
+    private static void demoErrorWhenRequested(final boolean errorWhenRequested) {
+	final AtomicReference<Subscription> subscriptionHolder = new AtomicReference<>();
+	Flux.error(new RuntimeException(), errorWhenRequested)//
+		.doOnRequest(req -> System.out.println("Requested!"))//
+		.doOnSubscribe(sub -> System.out.println("Subscribed!"))//
+		.doOnError(err -> System.out.println("Error occured!"))//
+		.onErrorReturn("fallback")
+		.subscribe(o -> {
+	}, t -> {
+	}, () -> {
+	}, subscriptionHolder::set);
+
+	System.out.println("Requesting now:");
+	subscriptionHolder.get().request(1);
     }
 }
