@@ -3,6 +3,7 @@ package sr.reactdemos.mono.operators;
 import java.time.Duration;
 
 import reactor.core.publisher.Mono;
+import sr.reactdemos.utils.Utils;
 
 public class MonoDoMethods {
     public static void main(final String[] args) {
@@ -20,6 +21,19 @@ public class MonoDoMethods {
 
 	System.out.println("Blocked output: " + delayedMono//
 		.block());
+
+	// doOnTerminate : doOnComplete OR doOnError
+	// doAfterTerminate : runs after the final subscriber is complete running
+	Mono.just(1)//
+		.doOnTerminate(Utils.printRunnable("On terminate1"))//
+		.doOnTerminate(Utils.printRunnable("On terminate2"))//
+		.doOnTerminate(Utils.printRunnable("On terminate3"))//
+		.doAfterTerminate(Utils.printRunnable("After terminate1"))//
+		.doAfterTerminate(Utils.printRunnable("After terminate2"))//
+		.doAfterTerminate(Utils.printRunnable("After terminate3"))//
+		.subscribe(i -> {
+		}, t -> {
+		}, Utils.printRunnable("The mono has completed, now we'll run the doAfterTerminates"));
 
 
     }

@@ -2,6 +2,7 @@ package sr.reactdemos.utils;
 
 import java.time.Duration;
 import java.util.function.Consumer;
+import java.util.function.LongConsumer;
 
 import reactor.core.publisher.Mono;
 
@@ -19,7 +20,6 @@ public class Utils {
 	System.out.println(object);
     }
 
-
     public static void printThreadName() {
 	System.out.println("Ran on thread: " + Thread.currentThread().getName());
     }
@@ -35,6 +35,24 @@ public class Utils {
 
     public static <T> Consumer<T> print(final String message) {
 	return ob -> {
+	    System.out.println(message);
+	};
+    }
+
+    public static <T> Consumer<T> printWithMsg(final String message) {
+	return ob -> {
+	    System.out.println(message + " : " + ob);
+	};
+    }
+
+    public static LongConsumer printLongWithMsg(final String message) {
+	return ob -> {
+	    System.out.println(message + " : " + ob);
+	};
+    }
+
+    public static LongConsumer printConsumingLong(final String message) {
+	return l -> {
 	    System.out.println(message);
 	};
     }

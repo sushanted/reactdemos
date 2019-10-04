@@ -12,5 +12,7 @@ public class SimpleFluxOps {
 			.defaultIfEmpty(-1)//
 			.blockLast()//
 	);
+
+	System.out.println(Flux.range(0, 5).ignoreElements().block());
     }
 }
