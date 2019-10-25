@@ -43,14 +43,18 @@ public class FluxGenerateCreate {
 
 	// The final param is the stateConsumer, which can be used to cleanup any used
 	// resources (e.g. connection.close())
-	Flux.generate(() -> 0, (counter, sink) -> {
-	    if (counter < 30) {
-		sink.next(++counter);
-	    } else {
-		sink.complete();
-	    }
-	    return counter;
-	}, counter -> System.out.println("Last counter was: " + counter))//
+	Flux.generate(//
+		() -> 0, //
+		(counter, sink) -> {
+		    if (counter < 30) {
+			sink.next(++counter);
+		    } else {
+			sink.complete();
+		    }
+		    return counter;
+		}, //
+		counter -> System.out.println("Last counter was: " + counter)//
+	)//
 		.subscribe(System.out::println);
 
 	final AtomicReference<Subscription> subscriptionHolder = new AtomicReference<>();

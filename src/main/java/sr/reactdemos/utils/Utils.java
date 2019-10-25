@@ -1,5 +1,6 @@
 package sr.reactdemos.utils;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.util.function.Consumer;
 import java.util.function.LongConsumer;
@@ -14,6 +15,15 @@ public class Utils {
 
     public static void sleepForMillis(final int millis) {
 	Mono.delay(Duration.ofMillis(millis)).block();
+    }
+
+    public static void nonReactiveSleepForMillis(final int millis) {
+	try {
+	    Thread.sleep(millis);
+	} catch (final InterruptedException e) {
+	    e.printStackTrace();
+	    throw new RuntimeException(e);
+	}
     }
 
     public static void print(final Object object) {
@@ -61,6 +71,15 @@ public class Utils {
 	return () -> {
 	    System.out.println(message);
 	};
+    }
+
+    public static void waitForUserInput() {
+	System.out.println("Hit enter key to continue...");
+	try {
+	    System.in.read();
+	} catch (final IOException e) {
+	    e.printStackTrace();
+	}
     }
 
 }

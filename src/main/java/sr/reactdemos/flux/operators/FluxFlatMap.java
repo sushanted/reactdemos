@@ -31,6 +31,7 @@ public class FluxFlatMap {
 	System.out.println("\nFlat map with publisher mapper (no ordering, interleaving), with provided concurrency");
 	Flux.just("A", "B", "C", "D")//
 		.index()//
+		.doOnRequest(Utils.printLongWithMsg("requested by flatmap"))
 		.flatMap(//
 			indexed -> Flux.range(1, 3)//
 				.delayElements(Duration.ofMillis(indexed.getT1()))//
@@ -46,6 +47,7 @@ public class FluxFlatMap {
 		"\nFlat map with publisher mapper (no ordering, interleaving), with provided concurrency and prefetch");
 	Flux.just("A", "B", "C", "D")//
 		.index()//
+		.doOnRequest(Utils.printLongWithMsg("requested by flatmap"))
 		.flatMap(//
 			indexed -> Flux.range(1, 5)//
 				.delayElements(Duration.ofMillis(indexed.getT1()))//

@@ -55,7 +55,8 @@ public class FluxLimits {
 		 // if lowTide >= prefetch : defaulted to 75
 		 // if lowTide == 0 : next requests are made only after all prefetch items are
 		 // emitted
-		.limitRate(100, 99).doOnNext(n -> emittedCount.getAndIncrement())//
+		.limitRate(100, 99)//
+		.doOnNext(n -> emittedCount.getAndIncrement())//
 		.blockLast();
 
 	System.out.println("\nSame as the default limit rate");

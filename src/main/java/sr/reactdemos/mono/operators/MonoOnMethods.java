@@ -62,7 +62,8 @@ public class MonoOnMethods {
 		Mono.just("x")//
 			.doOnNext(t -> {
 			    throw new IllegalArgumentException();
-			}).onErrorMap(t -> new RuntimeException(t))//
+			})//
+			.onErrorMap(t -> new RuntimeException(t))//
 			.onErrorResume(t -> Mono.just(t.getClass().toString())).block()//
 	);
 
