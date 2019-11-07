@@ -36,7 +36,10 @@ public class MonoPublishOn {
 	// flatMap provides a new publisher, all next subscribers subscribe to this
 	// publisher
 	Mono.just("x")//
-		.flatMap(x -> Mono.just("y").publishOn(Schedulers.newSingle("newT")))//
+		.flatMap(//
+			x -> Mono.just("y")//
+				.publishOn(Schedulers.newSingle("newT"))//
+		)//
 		.doOnNext(Utils::printThreadName)//
 		.block();
     }

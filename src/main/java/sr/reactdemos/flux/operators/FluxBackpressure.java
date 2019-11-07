@@ -83,12 +83,12 @@ public class FluxBackpressure {
 		// Though unbounded, will receive items 200 ms apart
 		.doOnRequest(Utils.printLongWithMsg("Requested by backpressure operator"))//
 		// this will be printed after every 200 ms
-		.doOnNext(Utils.printWithMsg("Upstream Flux range produced"))//
+		.doOnNext(Utils.printValue("Upstream Flux range produced"))//
 		.onBackpressureBuffer()//
 		// .publishOn(Schedulers.elastic())// Note this important part : decouple
 		// pub-sub
 		.doOnRequest(Utils.printLongWithMsg("Requested to back-pressure operator by downstream"))//
-		.doOnNext(Utils.printWithMsg("Downstream received"))//
+		.doOnNext(Utils.printValue("Downstream received"))//
 		.doOnNext(t3 -> Utils.sleepForMillis(200))// Make the subscriber thread slow,
 		.limitRate(1, 0)// The rate is 1 per 200 ms
 		.blockLast();
@@ -100,12 +100,12 @@ public class FluxBackpressure {
 		// thread
 		.doOnRequest(Utils.printLongWithMsg("Requested by backpressure operator"))//
 		// this will be printed without any delay
-		.doOnNext(Utils.printWithMsg("Upstream Flux range produced"))//
+		.doOnNext(Utils.printValue("Upstream Flux range produced"))//
 		.onBackpressureBuffer()//
 		.publishOn(Schedulers.single())// Note this important part : decouple
 		// pub-sub
 		.doOnRequest(Utils.printLongWithMsg("Requested to back-pressure operator by downstream"))//
-		.doOnNext(Utils.printWithMsg("Downstream received"))//
+		.doOnNext(Utils.printValue("Downstream received"))//
 		.doOnNext(t1 -> Utils.nonReactiveSleepForMillis(200))// Make the subscriber thread slow,
 		.limitRate(1, 0)// The rate is 1 per 200 ms
 		.blockLast();
@@ -118,13 +118,13 @@ public class FluxBackpressure {
 		// thread
 		.doOnRequest(Utils.printLongWithMsg("Requested by backpressure operator"))//
 		// this will be printed without any delay
-		.doOnNext(Utils.printWithMsg("Upstream Flux range produced"))//
+		.doOnNext(Utils.printValue("Upstream Flux range produced"))//
 		.onBackpressureBuffer(3)//
 		.doOnRequest(Utils.printLongWithMsg("Requested to back-pressure operator by downstream"))//
 		.publishOn(Schedulers.single(), 1)// Note this important part : decouple
 		// pub-sub
 		.onErrorReturn(-1)//
-		.doOnNext(Utils.printWithMsg("Downstream received"))//
+		.doOnNext(Utils.printValue("Downstream received"))//
 		.doOnNext(t2 -> Utils.nonReactiveSleepForMillis(200))// Make the subscriber thread slow,
 		.blockLast();
 
@@ -146,15 +146,15 @@ public class FluxBackpressure {
 		// thread
 		.doOnRequest(Utils.printLongWithMsg("Requested by backpressure operator"))//
 		// this will be printed without any delay
-		.doOnNext(Utils.printWithMsg("Upstream Flux range produced"))//
-		.onBackpressureBuffer(3, Utils.printWithMsg("Overflowed item"))//
+		.doOnNext(Utils.printValue("Upstream Flux range produced"))//
+		.onBackpressureBuffer(3, Utils.printValue("Overflowed item"))//
 		.doOnRequest(Utils.printLongWithMsg("Requested to back-pressure operator by downstream"))//
 		.publishOn(Schedulers.single(), 1)// Note this important part : decouple
 		// pub-sub; request 1 item upstream at a time so slow buffer overflow should
 		// occur
 		// if 1 not provided, default 256 value is sent upstream
 		.onErrorReturn(-1)//
-		.doOnNext(Utils.printWithMsg("Downstream received"))//
+		.doOnNext(Utils.printValue("Downstream received"))//
 		.doOnNext(t -> Utils.nonReactiveSleepForMillis(200))// Make the subscriber thread slow,
 		.blockLast();
 
@@ -180,7 +180,7 @@ public class FluxBackpressure {
 		.doOnRequest(Utils.printLongWithMsg("Requested by backpressure operator"))//
 		// this will be printed without any delay
 		.timestamp()//
-		.doOnNext(Utils.printWithMsg("Upstream Flux range produced"))//
+		.doOnNext(Utils.printValue("Upstream Flux range produced"))//
 		.onBackpressureBuffer(Duration.ofMillis(600), 12,
 			n -> System.out.println("At: " + System.currentTimeMillis() + ", Overflowed After: "
 				+ (System.currentTimeMillis() - n.getT1())))//
@@ -189,7 +189,7 @@ public class FluxBackpressure {
 		// pub-sub; request 1 item upstream at a time so slow buffer overflow should
 		// occur
 		// if 1 not provided, default 256 value is sent upstream
-		.doOnNext(Utils.printWithMsg("Downstream received"))//
+		.doOnNext(Utils.printValue("Downstream received"))//
 		.doOnNext(t -> Utils.nonReactiveSleepForMillis(200))// Make the subscriber thread slow,
 		.blockLast();
 
@@ -199,14 +199,14 @@ public class FluxBackpressure {
 		// thread
 		.doOnRequest(Utils.printLongWithMsg("Requested by backpressure operator"))//
 		// this will be printed without any delay
-		.doOnNext(Utils.printWithMsg("Upstream Flux range produced"))//
-		.onBackpressureBuffer(Duration.ofMinutes(5), 5, Utils.printWithMsg("Overflowed item"))//
+		.doOnNext(Utils.printValue("Upstream Flux range produced"))//
+		.onBackpressureBuffer(Duration.ofMinutes(5), 5, Utils.printValue("Overflowed item"))//
 		.doOnRequest(Utils.printLongWithMsg("Requested to back-pressure operator by downstream"))//
 		.publishOn(Schedulers.single(), 1)// Note this important part : decouple
 		// pub-sub; request 1 item upstream at a time so slow buffer overflow should
 		// occur
 		// if 1 not provided, default 256 value is sent upstream
-		.doOnNext(Utils.printWithMsg("Downstream received"))//
+		.doOnNext(Utils.printValue("Downstream received"))//
 		.doOnNext(t -> Utils.nonReactiveSleepForMillis(200))// Make the subscriber thread slow,
 		.blockLast();
 
@@ -218,15 +218,15 @@ public class FluxBackpressure {
 		// thread
 		.doOnRequest(Utils.printLongWithMsg("Requested by backpressure operator"))//
 		// this will be printed without any delay
-		.doOnNext(Utils.printWithMsg("Upstream Flux range produced"))//
+		.doOnNext(Utils.printValue("Upstream Flux range produced"))//
 		.onBackpressureDrop()//
-		.doOnDiscard(Object.class, Utils.printWithMsg("Discarded"))//
+		.doOnDiscard(Object.class, Utils.printValue("Discarded"))//
 		.doOnRequest(Utils.printLongWithMsg("Requested to back-pressure operator by downstream"))//
 		.publishOn(Schedulers.single(), 1)// Note this important part : decouple
 		// pub-sub; request 1 item upstream at a time so slow buffer overflow should
 		// occur
 		// if 1 not provided, default 256 value is sent upstream
-		.doOnNext(Utils.printWithMsg("Downstream received"))//
+		.doOnNext(Utils.printValue("Downstream received"))//
 		.doOnNext(t -> Utils.nonReactiveSleepForMillis(200))// Make the subscriber thread slow,
 		.blockLast();
 
@@ -237,14 +237,14 @@ public class FluxBackpressure {
 		// thread
 		.doOnRequest(Utils.printLongWithMsg("Requested by backpressure operator"))//
 		// this will be printed without any delay
-		.doOnNext(Utils.printWithMsg("Upstream Flux range produced"))//
-		.onBackpressureDrop(Utils.printWithMsg("Dropped"))//
+		.doOnNext(Utils.printValue("Upstream Flux range produced"))//
+		.onBackpressureDrop(Utils.printValue("Dropped"))//
 		.doOnRequest(Utils.printLongWithMsg("Requested to back-pressure operator by downstream"))//
 		.publishOn(Schedulers.single(), 1)// Note this important part : decouple
 		// pub-sub; request 1 item upstream at a time so slow buffer overflow should
 		// occur
 		// if 1 not provided, default 256 value is sent upstream
-		.doOnNext(Utils.printWithMsg("Downstream received"))//
+		.doOnNext(Utils.printValue("Downstream received"))//
 		.doOnNext(t -> Utils.nonReactiveSleepForMillis(200))// Make the subscriber thread slow,
 		.blockLast();
 
@@ -254,7 +254,7 @@ public class FluxBackpressure {
 		// thread
 		.doOnRequest(Utils.printLongWithMsg("Requested by backpressure operator"))//
 		// this will be printed without any delay
-		.doOnNext(Utils.printWithMsg("Upstream Flux range produced"))//
+		.doOnNext(Utils.printValue("Upstream Flux range produced"))//
 		.onBackpressureError()//
 		.doOnRequest(Utils.printLongWithMsg("Requested to back-pressure operator by downstream"))//
 		.publishOn(Schedulers.single(), 1)// Note this important part : decouple
@@ -262,7 +262,7 @@ public class FluxBackpressure {
 		// occur
 		// if 1 not provided, default 256 value is sent upstream
 		.onErrorReturn(-1)//
-		.doOnNext(Utils.printWithMsg("Downstream received"))//
+		.doOnNext(Utils.printValue("Downstream received"))//
 		.doOnNext(t -> Utils.nonReactiveSleepForMillis(200))// Make the subscriber thread slow,
 		.blockLast();
 
@@ -273,7 +273,7 @@ public class FluxBackpressure {
 		// thread
 		.doOnRequest(Utils.printLongWithMsg("Requested by backpressure operator"))//
 		// this will be printed without any delay
-		.doOnNext(Utils.printWithMsg("Upstream Flux range produced"))//
+		.doOnNext(Utils.printValue("Upstream Flux range produced"))//
 		.onBackpressureLatest()//
 		.doOnRequest(Utils.printLongWithMsg("Requested to back-pressure operator by downstream"))//
 		.publishOn(Schedulers.single(), 1)// Note this important part : decouple
@@ -281,7 +281,7 @@ public class FluxBackpressure {
 		// occur
 		// if 1 not provided, default 256 value is sent upstream
 		.onErrorReturn(-1)//
-		.doOnNext(Utils.printWithMsg("Downstream received"))//
+		.doOnNext(Utils.printValue("Downstream received"))//
 		.doOnNext(t -> Utils.nonReactiveSleepForMillis(200))// Make the subscriber thread slow,
 		.blockLast();
 
@@ -293,15 +293,15 @@ public class FluxBackpressure {
 		// thread
 		.doOnRequest(Utils.printLongWithMsg("Requested by backpressure operator"))//
 		// this will be printed without any delay
-		.doOnNext(Utils.printWithMsg("Upstream Flux range produced"))//
-		.onBackpressureBuffer(3, Utils.printWithMsg("Overflowed item"), overflowStrategy)//
+		.doOnNext(Utils.printValue("Upstream Flux range produced"))//
+		.onBackpressureBuffer(3, Utils.printValue("Overflowed item"), overflowStrategy)//
 		.doOnRequest(Utils.printLongWithMsg("Requested to back-pressure operator by downstream"))//
 		.publishOn(Schedulers.single(), 1)// Note this important part : decouple
 		// pub-sub; request 1 item upstream at a time so slow buffer overflow should
 		// occur
 		// if 1 not provided, default 256 value is sent upstream
 		.onErrorReturn(-1)//
-		.doOnNext(Utils.printWithMsg("Downstream received"))//
+		.doOnNext(Utils.printValue("Downstream received"))//
 		.doOnNext(t -> Utils.nonReactiveSleepForMillis(200))// Make the subscriber thread slow,
 		.blockLast();
     }
@@ -312,7 +312,7 @@ public class FluxBackpressure {
 		// thread
 		.doOnRequest(Utils.printLongWithMsg("Requested by backpressure operator"))//
 		// this will be printed without any delay
-		.doOnNext(Utils.printWithMsg("Upstream Flux range produced"))//
+		.doOnNext(Utils.printValue("Upstream Flux range produced"))//
 		.onBackpressureBuffer(3, overflowStrategy)//
 		.doOnRequest(Utils.printLongWithMsg("Requested to back-pressure operator by downstream"))//
 		.publishOn(Schedulers.single(), 1)// Note this important part : decouple
@@ -320,7 +320,7 @@ public class FluxBackpressure {
 		// occur
 		// if 1 not provided, default 256 value is sent upstream
 		.onErrorReturn(-1)//
-		.doOnNext(Utils.printWithMsg("Downstream received"))//
+		.doOnNext(Utils.printValue("Downstream received"))//
 		.doOnNext(t -> Utils.nonReactiveSleepForMillis(200))// Make the subscriber thread slow,
 		.blockLast();
     }

@@ -39,9 +39,9 @@ public class FluxFilter {
 	System.out.println("\nType based filter");
 	Flux.just(1.01d, 2.0, 3, "x", 4, "y")//
 		.ofType(Number.class)//
-		.doOnDiscard(Object.class, Utils.printWithMsg("Discarding non number"))//
+		.doOnDiscard(Object.class, Utils.printValue("Discarding non number"))//
 		.ofType(Integer.class)//
-		.doOnDiscard(Object.class, Utils.printWithMsg("Discarding non integer"))//
+		.doOnDiscard(Object.class, Utils.printValue("Discarding non integer"))//
 		.blockLast();
 
     }
