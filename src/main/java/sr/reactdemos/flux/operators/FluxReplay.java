@@ -53,7 +53,9 @@ public class FluxReplay {
 
 	// This will get all the items, as it has subscribed before ANY cached items
 	// expired
-	connectable.doOnNext(timeTracker.printValue("Early subscriber"))//
+	connectable//
+		.doOnSubscribe(timeTracker::lapse)//
+		.doOnNext(timeTracker.printValue("Early subscriber"))//
 		.subscribe();
 
 	// This shouldn't affect, as yet we are not connected
@@ -66,22 +68,25 @@ public class FluxReplay {
 	Utils.sleepForMillis(300);
 
 	// First few items immediately from cache
-	timeTracker.resetTime();
-	connectable.doOnNext(timeTracker.printValue("Late subscriber 1"))//
+	connectable//
+		.doOnSubscribe(timeTracker::lapse)//
+		.doOnNext(timeTracker.printValue("Late subscriber 1"))//
 		.subscribe();
 
 	Utils.sleepForMillis(500);
 
 	// First few items immediately from cache, will miss the expired items
-	timeTracker.resetTime();
-	connectable.doOnNext(timeTracker.printValue("Late subscriber 2"))//
+	connectable//
+		.doOnSubscribe(timeTracker::lapse)//
+		.doOnNext(timeTracker.printValue("Late subscriber 2"))//
 		.subscribe();
 
 	Utils.sleepForMillis(700);
 
 	// All the items are expired till this time, it will re-subscribe to original
-	timeTracker.resetTime();
-	connectable.doOnNext(timeTracker.printValue("Super late subscriber"))//
+	connectable//
+		.doOnSubscribe(timeTracker::lapse)//
+		.doOnNext(timeTracker.printValue("Super late subscriber"))//
 		.subscribe();
 
 	Utils.sleepForSeconds(4);
@@ -101,9 +106,11 @@ public class FluxReplay {
 		.delayElements(Duration.ofMillis(50))//
 		.replay(4);
 
-	final TimeTracker timeTracker = new TimeTracker();
 	// This will get all the items as it has subscribed before connect
-	connectable.doOnNext(timeTracker.printValue("Early subscriber"))//
+	final TimeTracker timeTracker = new TimeTracker();
+	connectable//
+		.doOnSubscribe(timeTracker::lapse)//
+		.doOnNext(timeTracker.printValue("Early subscriber"))//
 		.subscribe();
 
 	Utils.sleepForMillis(100);
@@ -118,14 +125,16 @@ public class FluxReplay {
 	// This will miss few items, as it subscribed late
 	// This will get first 4 items immediately from cache, then other items with
 	// delay
-	timeTracker.resetTime();
-	connectable.doOnNext(timeTracker.printValue("Late subscriber 1"))//
+	connectable//
+		.doOnSubscribe(timeTracker::lapse)//
+		.doOnNext(timeTracker.printValue("Late subscriber 1"))//
 		.subscribe();
 
 	Utils.sleepForMillis(100);
 	// This will miss few more items
-	timeTracker.resetTime();
-	connectable.doOnNext(timeTracker.printValue("Late subscriber 2"))//
+	connectable//
+		.doOnSubscribe(timeTracker::lapse)//
+		.doOnNext(timeTracker.printValue("Late subscriber 2"))//
 		.subscribe();
 
 	// Wait enough for all to complete
@@ -145,7 +154,10 @@ public class FluxReplay {
 
 	// This will get all the items as it has subscribed started before connect
 	connectable
-		.doOnNext(timeTracker.printValue("Early subscriber")).subscribe();
+		//
+		.doOnSubscribe(timeTracker::lapse)//
+		.doOnNext(timeTracker.printValue("Early subscriber"))//
+		.subscribe();
 
 	Utils.sleepForMillis(100);
 	// The values would have been cached at this time
@@ -160,14 +172,17 @@ public class FluxReplay {
 	// This will get first <history> items immediately from cache, then other items
 	// with
 	// delay
-	timeTracker.resetTime();
-	connectable.doOnNext(timeTracker.printValue("Late subscriber 1")).subscribe();
-
+	connectable//
+		.doOnSubscribe(timeTracker::lapse)//
+		.doOnNext(timeTracker.printValue("Late subscriber 1"))//
+		.subscribe();
 
 	Utils.sleepForMillis(100);
 	// This will miss few more items
-	timeTracker.resetTime();
-	connectable.doOnNext(timeTracker.printValue("Late subscriber 2")).subscribe();
+	connectable//
+		.doOnSubscribe(timeTracker::lapse)//
+		.doOnNext(timeTracker.printValue("Late subscriber 2"))//
+		.subscribe();
 
 	// Wait enough for all to complete
 	Utils.sleepForSeconds(2);
@@ -198,7 +213,8 @@ public class FluxReplay {
 	Utils.sleepForMillis(500);
 
 	// This will get first 4-5 items fast, but later will face the 100ms delay
-	replayable
+	replayable//
+		.doOnSubscribe(timeTracker::lapse)//
 		.doOnNext(timeTracker.printValue("Late subscriber"))//
 		.subscribe();
 
@@ -206,7 +222,9 @@ public class FluxReplay {
 
 	// This will get all the cached items and very fast, because they are readily
 	// cached!
-	replayable.doOnNext(timeTracker.printValue("Very late subscriber"))
+	replayable//
+		.doOnSubscribe(timeTracker::lapse)//
+		.doOnNext(timeTracker.printValue("Very late subscriber"))
 		.subscribe();
 
 	Utils.sleepForSeconds(3);

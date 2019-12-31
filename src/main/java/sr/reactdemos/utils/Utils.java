@@ -113,18 +113,27 @@ public class Utils {
 
     public static class TimeTracker {
 
-	private long startTime = System.currentTimeMillis();
+	private final long startTime = System.currentTimeMillis();
+	private long lapseTime;
 
-	public TimeTracker resetTime() {
-	    this.startTime = System.currentTimeMillis();
+	public void lapse(final Object object) {
+	    this.lapseTime = System.currentTimeMillis();
+	}
+
+	public TimeTracker lapse() {
+	    this.lapseTime = System.currentTimeMillis();
 	    return this;
 	}
 
 	public <T> Consumer<T> printValue(final String message) {
 	    return ob -> {
-		System.out.println(
-			message + " received " + ob + " at " + (System.currentTimeMillis() - this.startTime));
+		System.out.println(message + " received " + ob + " at " + (System.currentTimeMillis() - this.startTime)
+			+ (this.lapseTime == 0 ? "" : " after lapse " + (System.currentTimeMillis() - this.lapseTime)));
 	    };
+	}
+
+	public long elapsed() {
+	    return System.currentTimeMillis() - this.startTime;
 	}
     }
 
