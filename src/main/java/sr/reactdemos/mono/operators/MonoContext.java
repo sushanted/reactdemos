@@ -14,20 +14,21 @@ public class MonoContext {
 
 	// Context flows upstream on subscribing to upstream
 
-	System.out.println("Context: " + Mono.subscriberContext()//
-		.subscriberContext(context -> {
-		    // This way you can access the context
-		    System.out.println("Final context: " + context);
-		    return context;
-		})//
-		.map(x -> x)//
-		// another way to modify the context
-		.subscriberContext(context -> context.put("B", 2))//
-		.map(y -> y)//
-		// Way to enrich the existing context with the values
-		.subscriberContext(Context.of("A", 1))//
-		.block());
-
+	System.out.println(//
+		"Context: " + Mono.subscriberContext()//
+			.subscriberContext(context -> {
+			    // This way you can access the context
+			    System.out.println("Final context: " + context);
+			    return context;
+			})//
+			.map(x -> x)//
+			// another way to modify the context
+			.subscriberContext(context -> context.put("B", 2))//
+			.map(y -> y)//
+			// Way to enrich the existing context with the values
+			.subscriberContext(Context.of("A", 1))//
+			.block()//
+	);
 
 	// There could be multiple operations on the returned Mono and the context could
 	// be set by the leaf operator
@@ -43,11 +44,14 @@ public class MonoContext {
 	System.out.println(cuber().subscriberContext(Context.of("value", 2)).block());
 	System.out.println(cuber().subscriberContext(Context.of("value", 3)).block());
 
-
+	Utils.demo("Getting value from context/putting new value into the context ");
 	Flux.range(0, 5)//
 		.flatMap(//
 			i -> Mono.subscriberContext()//
 				.map(context -> context.put(i, i))//
+		// This mono will be subscribed 5 times by downstream, giving a fresh context
+		// {-1=-1} every
+		// time
 		)//
 		.doOnNext(Utils.printValue("context"))//
 		.subscriberContext(Context.of(-1, -1))//
@@ -80,8 +84,7 @@ public class MonoContext {
 	// Consider as if the callable calls a web service with the token in the context
 	// and populates the mono
 	return Mono.subscriberContext()//
-		.map(context -> context.getOrDefault("value", -1))
-		.map(value -> value * value * value);
+		.map(context -> context.getOrDefault("value", -1)).map(value -> value * value * value);
 
     }
 
