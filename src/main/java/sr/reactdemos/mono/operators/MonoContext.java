@@ -44,19 +44,35 @@ public class MonoContext {
 	System.out.println(cuber().subscriberContext(Context.of("value", 2)).block());
 	System.out.println(cuber().subscriberContext(Context.of("value", 3)).block());
 
+	demoDynamicContext();
+
+    }
+
+    private static void demoDynamicContext() {
 	Utils.demo("Getting value from context/putting new value into the context ");
-	Flux.range(0, 5)//
+	final Flux<Object> publisher = Flux.range(0, 5)//
 		.flatMap(//
 			i -> Mono.subscriberContext()//
-				.map(context -> context.put(i, i))//
+				.map(context -> context.put("value", i * context.getOrDefault("seed", 1)))//
 		// This mono will be subscribed 5 times by downstream, giving a fresh context
-		// {-1=-1} every
+		// every
 		// time
 		)//
 		.doOnNext(Utils.printValue("context"))//
-		.subscriberContext(Context.of(-1, -1))//
+		.map(context -> context.get("value"))//
+		.doOnNext(Utils.printValue("calculated value"));
+
+	// Depending on the seed provided by the subscriber, the series changes.
+	publisher//
+		.subscriberContext(Context.of("seed", 1))//
 		.blockLast();
 
+	publisher//
+		.subscriberContext(Context.of("seed", 3))//
+		.blockLast();
+
+	// Default seed considered by the publisher
+	publisher.blockLast();
     }
 
     public static Mono<Integer> squarer() {
