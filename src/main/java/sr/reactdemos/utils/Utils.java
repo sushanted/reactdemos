@@ -111,4 +111,21 @@ public class Utils {
 	System.out.println("\n\n" + demoCase);
     }
 
+    public static class TimeTracker {
+
+	private long startTime = System.currentTimeMillis();
+
+	public TimeTracker resetTime() {
+	    this.startTime = System.currentTimeMillis();
+	    return this;
+	}
+
+	public <T> Consumer<T> printValue(final String message) {
+	    return ob -> {
+		System.out.println(
+			message + " received " + ob + " at " + (System.currentTimeMillis() - this.startTime));
+	    };
+	}
+    }
+
 }

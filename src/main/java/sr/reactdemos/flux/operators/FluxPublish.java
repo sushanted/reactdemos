@@ -40,7 +40,7 @@ public class FluxPublish {
 	// At this point the value is cached into the publisher and will be used forever
 	System.out.println("Second subscriber:" + hotPublisher.block());
 	Utils.sleepForMillis(500);
-	System.out.println("Second subscriber:" + hotPublisher.block());
+	System.out.println("Third subscriber:" + hotPublisher.block());
     }
 
     private static void demoPublish() {

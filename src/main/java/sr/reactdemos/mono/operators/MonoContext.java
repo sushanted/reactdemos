@@ -3,8 +3,10 @@ package sr.reactdemos.mono.operators;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.context.Context;
+import sr.reactdemos.utils.Utils;
 
 public class MonoContext {
 
@@ -32,6 +34,25 @@ public class MonoContext {
 	System.out.println(squarer().subscriberContext(Context.of("value", 2)).block());
 	System.out.println(squarer().subscriberContext(Context.of("value", 3)).block());
 
+	Utils.demo("Getting value from context as a publisher element");
+	Mono.subscriberContext()//
+		.map(context -> context.getOrDefault("x", "default"))//
+		.subscriberContext(Context.of("x", "special"))//
+		.subscribe(Utils.printValue("value"));
+
+	System.out.println(cuber().subscriberContext(Context.of("value", 2)).block());
+	System.out.println(cuber().subscriberContext(Context.of("value", 3)).block());
+
+
+	Flux.range(0, 5)//
+		.flatMap(//
+			i -> Mono.subscriberContext()//
+				.map(context -> context.put(i, i))//
+		)//
+		.doOnNext(Utils.printValue("context"))//
+		.subscriberContext(Context.of(-1, -1))//
+		.blockLast();
+
     }
 
     public static Mono<Integer> squarer() {
@@ -47,6 +68,21 @@ public class MonoContext {
 		    System.out.println("Final context: " + context);
 		    return context;
 		});//
+    }
+
+    /**
+     * Compare this with squarer above
+     *
+     * @return
+     */
+    public static Mono<Integer> cuber() {
+
+	// Consider as if the callable calls a web service with the token in the context
+	// and populates the mono
+	return Mono.subscriberContext()//
+		.map(context -> context.getOrDefault("value", -1))
+		.map(value -> value * value * value);
+
     }
 
 }

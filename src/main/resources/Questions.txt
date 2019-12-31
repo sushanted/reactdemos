@@ -4,3 +4,5 @@
 4. MonoProcessor vs Mono.cache, toProcessor
 5. what is prefetch?
 6. PublishOn vs SubscribeOn
+7. flatMap : parallel execution for each item in upstream, publishOn inside flatMap
+8. cache vs publish vs publishNext vs replay
