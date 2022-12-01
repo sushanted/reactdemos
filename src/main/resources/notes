@@ -1,0 +1,83 @@
+
+request before limit
+java.lang.Exception
+	at sr.reactdemos.flux.operators.FluxBackpressure.lambda$0(FluxBackpressure.java:42)
+	at reactor.core.publisher.FluxPeekFuseable$PeekFuseableSubscriber.request(FluxPeekFuseable.java:132)
+	at reactor.core.publisher.BlockingSingleSubscriber.onSubscribe(BlockingSingleSubscriber.java:49)
+	at reactor.core.publisher.FluxPeekFuseable$PeekFuseableSubscriber.onSubscribe(FluxPeekFuseable.java:172)
+	at reactor.core.publisher.FluxPublishOn$PublishOnSubscriber.onSubscribe(FluxPublishOn.java:199)
+	at reactor.core.publisher.FluxOnBackpressureBuffer$BackpressureBufferSubscriber.onSubscribe(FluxOnBackpressureBuffer.java:151)
+	at reactor.core.publisher.FluxRange.subscribe(FluxRange.java:68)
+	at reactor.core.publisher.FluxOnBackpressureBuffer.subscribe(FluxOnBackpressureBuffer.java:59)
+	at reactor.core.publisher.FluxPublishOn.subscribe(FluxPublishOn.java:108)
+	at reactor.core.publisher.FluxPeekFuseable.subscribe(FluxPeekFuseable.java:86)
+	at reactor.core.publisher.Flux.blockLast(Flux.java:2388)
+	at sr.reactdemos.flux.operators.FluxBackpressure.main(FluxBackpressure.java:43)
+
+request after limit
+First
+java.lang.Exception
+	at sr.reactdemos.flux.operators.FluxBackpressure.lambda$0(FluxBackpressure.java:41)
+	at reactor.core.publisher.FluxPeekFuseable$PeekFuseableSubscriber.request(FluxPeekFuseable.java:132)
+	at reactor.core.publisher.FluxPublishOn$PublishOnSubscriber.onSubscribe(FluxPublishOn.java:211)
+	at reactor.core.publisher.FluxPeekFuseable$PeekFuseableSubscriber.onSubscribe(FluxPeekFuseable.java:172)
+	at reactor.core.publisher.FluxOnBackpressureBuffer$BackpressureBufferSubscriber.onSubscribe(FluxOnBackpressureBuffer.java:151)
+	at reactor.core.publisher.FluxRange.subscribe(FluxRange.java:68)
+	at reactor.core.publisher.FluxOnBackpressureBuffer.subscribe(FluxOnBackpressureBuffer.java:59)
+	at reactor.core.publisher.FluxPeekFuseable.subscribe(FluxPeekFuseable.java:86)
+	at reactor.core.publisher.FluxPublishOn.subscribe(FluxPublishOn.java:108)
+	at reactor.core.publisher.Flux.blockLast(Flux.java:2388)
+	at sr.reactdemos.flux.operators.FluxBackpressure.main(FluxBackpressure.java:43)
+
+Later:
+java.lang.Exception
+	at sr.reactdemos.flux.operators.FluxBackpressure.lambda$0(FluxBackpressure.java:41)
+	at reactor.core.publisher.FluxPeekFuseable$PeekFuseableSubscriber.request(FluxPeekFuseable.java:132)
+	at reactor.core.publisher.FluxPublishOn$PublishOnSubscriber.runAsync(FluxPublishOn.java:405)
+	at reactor.core.publisher.FluxPublishOn$PublishOnSubscriber.run(FluxPublishOn.java:484)
+	at reactor.core.scheduler.ImmediateScheduler$ImmediateSchedulerWorker.schedule(ImmediateScheduler.java:79)
+	at reactor.core.publisher.FluxPublishOn$PublishOnSubscriber.trySchedule(FluxPublishOn.java:289)
+	at reactor.core.publisher.FluxPublishOn$PublishOnSubscriber.onNext(FluxPublishOn.java:232)
+	at reactor.core.publisher.FluxPeekFuseable$PeekFuseableSubscriber.onNext(FluxPeekFuseable.java:204)
+	at reactor.core.publisher.FluxOnBackpressureBuffer$BackpressureBufferSubscriber.drainRegular(FluxOnBackpressureBuffer.java:251)
+	at reactor.core.publisher.FluxOnBackpressureBuffer$BackpressureBufferSubscriber.drain(FluxOnBackpressureBuffer.java:215)
+	at reactor.core.publisher.FluxOnBackpressureBuffer$BackpressureBufferSubscriber.onNext(FluxOnBackpressureBuffer.java:177)
+	at reactor.core.publisher.FluxRange$RangeSubscription.fastPath(FluxRange.java:129)
+	at reactor.core.publisher.FluxRange$RangeSubscription.request(FluxRange.java:107)
+	at reactor.core.publisher.FluxOnBackpressureBuffer$BackpressureBufferSubscriber.onSubscribe(FluxOnBackpressureBuffer.java:152)
+	at reactor.core.publisher.FluxRange.subscribe(FluxRange.java:68)
+	at reactor.core.publisher.FluxOnBackpressureBuffer.subscribe(FluxOnBackpressureBuffer.java:59)
+	at reactor.core.publisher.FluxPeekFuseable.subscribe(FluxPeekFuseable.java:86)
+	at reactor.core.publisher.FluxPublishOn.subscribe(FluxPublishOn.java:108)
+	at reactor.core.publisher.Flux.blockLast(Flux.java:2388)
+	at sr.reactdemos.flux.operators.FluxBackpressure.main(FluxBackpressure.java:43)
+
+
+
+
+fluxRange
+backPressure
+limit
+blockLast
+
+
+subscribe (blockLast to fluxRange),
+onSubscribe : backPressure,
+  onSubscribe : limit
+    onSubscribe : blockLast
+    request(n) : backPressure : I know the business
+  request(unbounded) : fluxRange : I know the business
+    for each element:
+      onNext, drain, drainRegular : backPressure
+        for all requested (n)
+          onNext: limit
+            onNext: blockLast
+            request(n) : backpressure
+
+
+
+
+publishOn
+  onSubscribe : blockLast
+    request : limit
+  request : BackpressureBuffer
